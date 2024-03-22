@@ -1,6 +1,6 @@
 
 '''
-Indiquez ici :
+Indiquez ici 
 
 - évolution d'une population
 - le code couleur utilisé (légende)
