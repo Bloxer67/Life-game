@@ -1,4 +1,3 @@
-dgdtfdg
 
 '''
 Indiquez ici :
