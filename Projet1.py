@@ -38,6 +38,7 @@ def afficher_case(T, i, j, w, h):
                 
         Dessine la case de coordonnées (i, j).
     '''
+    rect(j*w)    
     pass
     
 def afficher(T):
