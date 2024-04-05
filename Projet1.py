@@ -1,4 +1,4 @@
-
+from random import*
 '''
 Indiquez ici 
 
@@ -19,17 +19,19 @@ def creer_tableau(n, m):
     return T  
 
 def etape_suivante(T):
-    ''' 
-        T est un tableau à deux dimensions d'entiers
-        
-        Modifie chaque cellule du tableau en fonction des
-        cellules voisines
-    ''' 
-    pass      
-                
+    global etape 
+    n = len(T)
+    m = len(T[0])
+    for i in range(n):
+        for j in range(m):
+            if T[i][j] == 1:
+                # Mettre à jour les cellules voisines
+
+    etape += 1
+
+
     
-def afficher_case(T, i, j):
-    global w,h
+def afficher_case(T, i, j,w ,h):
     ''' 
         T est un tableau à deux dimensions d'entiers
         i et j sont les coordonnées de la case à afficher
@@ -39,11 +41,15 @@ def afficher_case(T, i, j):
                 
         Dessine la case de coordonnées (i, j).
     '''
+
+    if T[i][j] == 1: 
+        fill(0)
+    else :
+        fill(255)
     
     rect(j*w,i*h,w,h)    
     
 def afficher(T):
-    global w,h
     '''
         T est un tableau à deux dimensions d'entiers
         
@@ -51,29 +57,28 @@ def afficher(T):
     '''
     for i in range(len(T)): 
         for j in range(len(T[0])): 
-            rect(j*w, i*h, w, h)
+            afficher_case(T,i, j, 30, 30)
     
-
         
-    
 def setup():
-    global T, etape, w, h
+    global T, etape
+    etape = 0
     background(255)
     T = creer_tableau(50, 100)
+    T[12][12] = 1
     # Plein écran
     fullScreen()
-    w = 30
-    h = 30
     # Rapidité 
     frameRate(2)
     
+
 def draw():
     global T, etape
+    strokeWeight(1)
     afficher(T)
-    
+    etape_suivante(T)
     
 def mousePressed():
     exit()
-    
  
 
