@@ -39,9 +39,8 @@ def afficher_case(T, i, j, w, h):
         Dessine la case de coordonnées (i, j).
     '''
     w = width 
-    h = height 
-    rect(j*w)    
-    pass
+    h = height
+    rect(i*w,j*w,w,h)    
     
 def afficher(T):
     '''
@@ -49,23 +48,31 @@ def afficher(T):
         
         Dessine toutes les cases du tableau.
     '''
+    for ligne in T :
+        for case in ligne :
+            afficher_case(T,ligne.index)
+    
     pass
         
     
 def setup():
     global T, etape
-    
+    T = creer_tableau(3, 3)
     # Plein écran
     fullScreen()
     
     # Rapidité 
     frameRate(2)
+
+    afficher_case(T,
         
 def draw():
     global T, etape
+    afficher_case(T, 2, 3, 15, 15)
+    
     
 def mousePressed():
     exit()
     
  
-creer_tableau(5, 6)
+
