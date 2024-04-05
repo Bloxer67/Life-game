@@ -16,7 +16,7 @@ def creer_tableau(n, m):
         for i in range(m):
             M.append(0)
         T.append(M)
-    print(T) 
+    return T  
 
 def etape_suivante(T):
     ''' 
@@ -28,7 +28,8 @@ def etape_suivante(T):
     pass      
                 
     
-def afficher_case(T, i, j, w, h):
+def afficher_case(T, i, j):
+    global w,h
     ''' 
         T est un tableau à deux dimensions d'entiers
         i et j sont les coordonnées de la case à afficher
@@ -38,37 +39,37 @@ def afficher_case(T, i, j, w, h):
                 
         Dessine la case de coordonnées (i, j).
     '''
-    w = width 
-    h = height
-    rect(i*w,j*w,w,h)    
+    
+    rect(j*w,i*h,w,h)    
     
 def afficher(T):
+    global w,h
     '''
         T est un tableau à deux dimensions d'entiers
         
         Dessine toutes les cases du tableau.
     '''
-    for ligne in T :
-        for case in ligne :
-            afficher_case(T,ligne.index)
+    for i in range(len(T)): 
+        for j in range(len(T[0])): 
+            rect(j*w, i*h, w, h)
     
-    pass
+
         
     
 def setup():
-    global T, etape
-    T = creer_tableau(3, 3)
+    global T, etape, w, h
+    background(255)
+    T = creer_tableau(50, 100)
     # Plein écran
     fullScreen()
-    
+    w = 30
+    h = 30
     # Rapidité 
     frameRate(2)
-
-    afficher_case(T,
-        
+    
 def draw():
     global T, etape
-    afficher_case(T, 2, 3, 15, 15)
+    afficher(T)
     
     
 def mousePressed():
