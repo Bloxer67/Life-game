@@ -7,6 +7,7 @@ Indiquez ici
 - les règles de votre automate cellulaire (pas la peine de détailler)
 '''
 
+Start = False
 
 
 def creer_tableau(n, m):
@@ -19,16 +20,29 @@ def creer_tableau(n, m):
     return T  
 
 def etape_suivante(T):
-    global etape 
+    global etape
+    etape += 1 
     n = len(T)
     m = len(T[0])
+
+    # Parcourir le tableau
     for i in range(n):
         for j in range(m):
+            # Compter le nombre de voisins noirs
+            black_neighbors = 0
+            for x in range(max(0, i-1), min(n, i+2)):
+                for y in range(max(0, j-1), min(m, j+2)):
+                    if T[x][y] == 1 and (x != i or y != j):
+                        black_neighbors += 1
+
+            # Appliquer les règles du jeu de la vie de Conway
             if T[i][j] == 1:
-                # Mettre à jour les cellules voisines
-
-    etape += 1
-
+                if black_neighbors != 2 and black_neighbors != 3:
+                    T[i][j] = 0
+            else:
+                if black_neighbors == 3:
+                    T[i][j] = 1
+    
 
     
 def afficher_case(T, i, j,w ,h):
@@ -41,7 +55,6 @@ def afficher_case(T, i, j,w ,h):
                 
         Dessine la case de coordonnées (i, j).
     '''
-
     if T[i][j] == 1: 
         fill(0)
     else :
@@ -63,8 +76,7 @@ def afficher(T):
 def setup():
     global T, etape
     etape = 0
-    background(255)
-    T = creer_tableau(50, 100)
+    T = creer_tableau(50, 60)
     T[12][12] = 1
     # Plein écran
     fullScreen()
@@ -73,12 +85,39 @@ def setup():
     
 
 def draw():
-    global T, etape
+    global T, etape, Start
     strokeWeight(1)
     afficher(T)
-    etape_suivante(T)
+    if not Start : 
+        text("Sélectionnez les cellules (clic gauche pour vivante, clic droit pour morte)", 20, 20)
+        rect(displayWidth - 40 ,displayHeight - 30,100,40)
+        fill(0)
+        textSize(16)
+        textAlign(CENTER)
+        text("Start", displayWidth - 30, displayHeight - 20)
+    else :
+        etape_suivante(T)
     
+def demarrer_simulation():
+    global Start
+    Start = True
+    
+
+
 def mousePressed():
-    exit()
- 
+    global T, etape, Start
+
+    taille_cellule = min(displayWidth // 100, displayHeight // 50)
+    
+    # Convertir les coordonnées de la souris en indices de cellule
+    
+    if not Start:
+        i = int(mouseY / taille_cellule)
+        j = int(mouseX / taille_cellule)
+        if mouseButton == LEFT:
+            T[i][j] = 1
+        elif mouseButton == RIGHT:
+            T[i][j] = 0
+    elif:
+        exit()
 
