@@ -7,6 +7,7 @@ Indiquez ici
 - les règles de votre automate cellulaire (pas la peine de détailler)
 '''
 
+Start = False
 
 
 def creer_tableau(n, m):
@@ -19,16 +20,29 @@ def creer_tableau(n, m):
     return T  
 
 def etape_suivante(T):
-    global etape 
+    global etape
+    etape += 1 
     n = len(T)
     m = len(T[0])
+
+    # Parcourir le tableau
     for i in range(n):
         for j in range(m):
+            # Compter le nombre de voisins noirs
+            voisins = 0
+            for x in range(max(0, i-1), min(n, i+2)):
+                for y in range(max(0, j-1), min(m, j+2)):
+                    if T[x][y] == 1 and (x != i or y != j):
+                        voisins += 1
+
+            # Appliquer les règles du jeu de la vie de Conway
             if T[i][j] == 1:
-                # Mettre à jour les cellules voisines
-
-    etape += 1
-
+                if voisins != 2 and voisins != 3:
+                    T[i][j] = 0
+            else:
+                if voisins == 3:
+                    T[i][j] = 1
+    
 
     
 def afficher_case(T, i, j,w ,h):
@@ -41,7 +55,6 @@ def afficher_case(T, i, j,w ,h):
                 
         Dessine la case de coordonnées (i, j).
     '''
-
     if T[i][j] == 1: 
         fill(0)
     else :
@@ -63,8 +76,7 @@ def afficher(T):
 def setup():
     global T, etape
     etape = 0
-    background(255)
-    T = creer_tableau(50, 100)
+    T = creer_tableau(50, 60)
     T[12][12] = 1
     # Plein écran
     fullScreen()
@@ -73,12 +85,25 @@ def setup():
     
 
 def draw():
-    global T, etape
+    global T, etape, Start
     strokeWeight(1)
     afficher(T)
     etape_suivante(T)
-    
-def mousePressed():
-    exit()
- 
 
+
+def mousePressed():
+    global T, etape
+    taille_cellule = min(displayWidth // 100, displayHeight // 50)
+    
+    # Convertir les coordonnées de la souris en indices de cellule
+    
+    if etape == 0:
+        i = int(mouseY / taille_cellule)
+        j = int(mouseX / taille_cellule)
+        if mouseButton == LEFT:
+            T[i][j] = 1
+        elif mouseButton == RIGHT:
+            T[i][j] = 0
+    elif:
+        exit()
+ 
