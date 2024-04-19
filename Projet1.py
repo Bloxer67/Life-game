@@ -1,5 +1,4 @@
 from random import*
-import winsound
 
 '''
 Theme : évolution d'une population
@@ -11,20 +10,55 @@ Notre automatre cellulaire simule le développement d'une population à partir d
 Il permet au délà de ce que fait le Jeu de la vie une intéraction entre differentes branches au sein d'une même population ce qui rend la simulation plus 
 '''
 
-def BOOM(T, i, j,):
+def score():
+    fill(0, 0, 255)
+    text("Cellules noirs  = " + str(x), 20, 20)
+    text("Y = " + str(y), 20, 40)
+    text("Vitesse dx = " + str(dx), 20, 60)
+    text("Vitesse dy = " + str(dy), 20 , 80)
+
+
+def compteur_cellule_noir(T) :
+    n = len(T)
+    m = len(T[0])
+    compteur = 0
+    for i in range(n):
+        for i in range(m): 
+            if T[i][j] == 1 : 
+                compteur += 1 
+                
+def compteur_cellule_rouge(T) :
+    n = len(T)
+    m = len(T[0])
+    compteur = 0
+    for i in range(n):
+        for i in range(m): 
+            if T[i][j] == 2 : 
+                compteur += 1 
+                
+def compteur_cellule_rouge(T) :
+    n = len(T)
+    m = len(T[0])
+    compteur = 0
+    for i in range(n):
+        for i in range(m): 
+            if T[i][j] == 2 : 
+                compteur += 1 
+                
+                
+
+def BOOM(T, i, j):
     n = len(T)
     m = len(T[0])
     
     # Définir le rayon de l'explosion
     rayon = 1
-    
+    print("BOOM")
     # Parcourir les cellules dans le rayon de l'explosion
-    for x in range(i - rayon, i + rayon ):
-        for y in range(j - rayon, j + rayon):
+    for x in range(max(0, i - rayon), min(n, i + rayon + 1)):
+        for y in range(max(0, j - rayon), min(m, j + rayon + 1)):
             if T[x][y] != 2:
                 T[x][y] = 0
-    winsound.PlaySound("tnt",winsound.SND_FILENAME)
-                
 
 def creer_tableau(n, m):
     T = list()
@@ -38,9 +72,13 @@ def creer_tableau(n, m):
 def ajouter_terroriste_aleatoire(T):
     n = len(T)
     m = len(T[0])
-    i = randint(0, n-1)
-    j = randint(0, m-1)
-    T[i][j] = 3
+    # Générer un nombre aléatoire entre 0 et 1
+    chance = random()
+    # Si le nombre aléatoire est inférieur à 0.5, ajouter un terroriste
+    if chance < 0.5:
+        i = randint(0, n-1)
+        j = randint(0, m-1)
+        T[i][j] = 3
     
 
 def etape_suivante(T):
@@ -57,7 +95,7 @@ def etape_suivante(T):
     nouvelle_generation = creer_tableau(n, m)
 
     #ajout aléatoire d'un terroriste
-    ajouter_terroriste_aleatoire(T)
+    ajouter_terroriste_aleatoire(T):
     
     #parcourir la liste T
     for i in range(n):
@@ -91,8 +129,7 @@ def etape_suivante(T):
             elif T[i][j] == 4 : 
                 nouvelle_generation[i][j] = 5
             elif T[i][j] == 5 : 
-                BOOM(T,i,j)
-            
+                BOOM(T,i,j)    
 
     for i in range(n):
         for j in range(m):
