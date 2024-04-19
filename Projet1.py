@@ -1,11 +1,30 @@
 from random import*
-'''
-Indiquez ici 
+import winsound
 
-- évolution d'une population
-- le code couleur utilisé (légende)
-- les règles de votre automate cellulaire (pas la peine de détailler)
 '''
+Theme : évolution d'une population
+Code couleur : 
+    Cellule noir : civil lambda
+    Cellule rouge : civil résistant 
+    Cellule Bleu : civil terroriste
+Notre automatre cellulaire simule le développement d'une population à partir des des voisins qui entourent une cellule déjà vivante
+Il permet au délà de ce que fait le Jeu de la vie une intéraction entre differentes branches au sein d'une même population ce qui rend la simulation plus 
+'''
+
+def BOOM(T, i, j,):
+    n = len(T)
+    m = len(T[0])
+    
+    # Définir le rayon de l'explosion
+    rayon = 1
+    
+    # Parcourir les cellules dans le rayon de l'explosion
+    for x in range(i - rayon, i + rayon ):
+        for y in range(j - rayon, j + rayon):
+            if T[x][y] != 2:
+                T[x][y] = 0
+    winsound.PlaySound("tnt",winsound.SND_FILENAME)
+                
 
 def creer_tableau(n, m):
     T = list()
@@ -16,33 +35,42 @@ def creer_tableau(n, m):
         T.append(M)
     return T  
 
-def ajouter_case_noire_aleatoire(T):
+def ajouter_terroriste_aleatoire(T):
     n = len(T)
     m = len(T[0])
     i = randint(0, n-1)
     j = randint(0, m-1)
-    T[i][j] = 1
+    T[i][j] = 3
+    
 
 def etape_suivante(T):
     global etape 
-    etape += 1 
+    if etape >= 1 :
+        etape += 1 
     n = len(T)
     m = len(T[0])
 
     # Créer une copie temporaire de la grille pour les calculs
     nouvelle_generation = creer_tableau(n, m)
 
+     # Créer une copie temporaire de la grille pour les calculs
+    nouvelle_generation = creer_tableau(n, m)
+
+    #ajout aléatoire d'un terroriste
+    ajouter_terroriste_aleatoire(T)
+    
+    #parcourir la liste T
     for i in range(n):
         for j in range(m):
             # Compter le nombre de voisins noirs
             voisins = 0
             for x in range(-1, 2):
                 for y in range(-1, 2):
-                    if i + x >= 0 and i + x < n and j + y >= 0 and j + y < m and (x != 0 or y != 0):
-                        voisins += T[i + x][j + y]
-
+                    if i + x >= 0 and i + x < n and j + y >= 0 and j + y < m :
+                        if T[i +x][j+y] == 1 :
+                            voisins += 1
             # Appliquer les règles de reproduction
-            if T[i][j] == 1:
+            if T[i][j] == 0:
                 # Si une cellule noire a exactement trois voisins noirs ou plus, elle se reproduit
                 if voisins >= 3:
                     nouvelle_generation[i][j] = 1
@@ -54,16 +82,24 @@ def etape_suivante(T):
             # Si une cellule est entourée de 9 cases noires, elle devient rouge
             if T[i][j] == 1 and voisins == 9:
                 nouvelle_generation[i][j] = 2
-            # Les cellules vivantes restent inchangées
+            # Les cellules vivantes ne changent pas 
             elif T[i][j] == 1:
                 nouvelle_generation[i][j] = 1
+             # Si une cellule est bleu, elle ne peut pas être changé
+            if T[i][j] == 3 : 
+                nouvelle_generation[i][j] = 4
+            elif T[i][j] == 4 : 
+                nouvelle_generation[i][j] = 5
+            elif T[i][j] == 5 : 
+                BOOM(T,i,j)
+            
 
-    # Mettre à jour la grille originale avec la nouvelle génération
     for i in range(n):
         for j in range(m):
             T[i][j] = nouvelle_generation[i][j]
-    if randint(0,5) == 1 :
-        ajouter_case_noire_aleatoire(T)
+            # Vérifier si une cellule rouge a été créée il y a deux étapes et déclencher une explosion
+            if T[i][j] == 3 and etape - T[i][j+1] == 2:
+                BOOM(T, i, j)
 
 def afficher_case(T, i, j,w ,h):
     ''' 
@@ -81,7 +117,12 @@ def afficher_case(T, i, j,w ,h):
         fill(255)
     elif T[i][j] == 2:
         fill(250,10,10)
-    
+    elif T[i][j] == 3:
+        fill(10,10,170)
+    elif T[i][j] == 4:
+        fill(10,10,210)
+    elif T[i][j] == 5:
+        fill(10,10,255)
     rect(j*w,i*h,w,h)    
     
 def afficher(T):
@@ -92,13 +133,13 @@ def afficher(T):
     '''
     for i in range(len(T)): 
         for j in range(len(T[0])): 
-            afficher_case(T,i, j, width/len(T[0]), height/len(T))
+            afficher_case(T,i, j,22,22)
     
         
 def setup():
     global T, etape
     etape = 0
-    T = creer_tableau(40, 35)
+    T = creer_tableau(38, 64)
     T[12][12] = 1
     T[13][13] = 1
     T[12][14] = 1
